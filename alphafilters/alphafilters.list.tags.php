@@ -10,8 +10,9 @@ Tags=list.tpl:{ALPHAFILTER_1},{ALPHAFILTER_2},{ALPHAFILTER_3}{ALPHAFILTER_RESET}
  * Alpha Filters plugin for Cotonti CMF
  *
  * @package alphafilters
- * @author esclkm http://www.littledev.ru, Cotonti Team
- * @copyright (c) 2008-2011 esclkm, 2011-2023 Cotonti Team
+ * @author esclkm, Kalnov Alexey <kalnovalexey@yandex.ru>, Cotonti Team
+ * @copyright (c) 2008-2011 esclkm https://www.cotonti.com/en/users/esclkm,
+ *  2011-2023 Lily Software https://lily-software.com (ex. Portal30 Studio), Cotonti Team
  *
  * @var XTemplate $t
  * @var array $list_url_path

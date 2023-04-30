@@ -3,8 +3,9 @@
  * Russian Language File for the Alpha Filters plugin
  *
  * @package alphafilters
- * @author esclkm http://www.littledev.ru, Cotonti Team
- * @copyright (c) 2008-2011 esclkm, 2011-2023 Cotonti Team
+ * @author esclkm, Kalnov Alexey <kalnovalexey@yandex.ru>, Cotonti Team
+ * @copyright (c) 2008-2011 esclkm https://www.cotonti.com/en/users/esclkm,
+ *  2011-2023 Lily Software https://lily-software.com (ex. Portal30 Studio), Cotonti Team
  */
 
 defined('COT_CODE') or die('Wrong URL.');
