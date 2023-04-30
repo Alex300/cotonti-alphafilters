@@ -1,58 +1,52 @@
 <?php
-
-/** 
- * [BEGIN_COT_EXT]
- * Hooks=users.query
- * [END_COT_EXT]
- */
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=users.query
+[END_COT_EXT]
+==================== */
 
 /**
- * Alphafilters Plugin for Cotonti CMF
+ * Alpha Filters plugin for Cotonti CMF
  *
- * @version 4.0.0
- * @author esclkm, http://www.littledev.ru
- * @copyright (c) 2008-2011 esclkm, http://www.littledev.ru
+ * @package alphafilters
+ * @author esclkm http://www.littledev.ru, Cotonti Team
+ * @copyright (c) 2008-2011 esclkm, 2011-2023 Cotonti Team
+ *
+ * @var array $users_url_path
  */
 
 defined('COT_CODE') or die('Wrong URL');
 
-$alpha = cot_import('alpha','G','TXT');
-$alpha = urldecode($alpha);
+if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers']) {
+    $alpha = cot_import('alpha', 'G', 'TXT');
+    if (!empty($alpha)) {
+        $alpha = urldecode($alpha);
+    }
+    if (!empty($alpha)) {
+        $users_url_path['alpha'] = $alpha;
+        $alphaFields = !empty(Cot::$cfg['plugin']['alphafilters']['fieldUsers']) ?
+            Cot::$cfg['plugin']['alphafilters']['fieldUsers'] : 'name';
 
-if (!empty($alpha))
-{
-	$users_url_path['alpha'] = urlencode($alpha);
-    if(empty($cfg['plugin']['alphafilters']['fieldusers'])){
-        $al_fields = array('name');
-
-        // Some extra fields
-        if (isset($cot_extrafields[$db_users]['firstname']))
-            $al_fields[] = 'firstname';
-        if (isset($cot_extrafields[$db_users]['first_name']))
-            $al_fields[] = 'first_name';
-
-        if (isset($cot_extrafields[$db_users]['lastname']))
-            $al_fields[] = 'lastname';
-        if (isset($cot_extrafields[$db_users]['last_name']))
-            $al_fields[] = 'last_name';
-
-    }else{
-        $cfg['plugin']['alphafilters']['fieldusers'] = str_replace(' ', '', $cfg['plugin']['alphafilters']['fieldusers']);
-        $al_fields = explode(',', $cfg['plugin']['alphafilters']['fieldusers']);
-        foreach($al_fields as $a_key => $a_val){
-            if(!isset($cot_extrafields[$db_users][$a_val]) && !array_key_exists($a_val, $users_sort_tags)){
-                unset($al_fields[$a_key]);
+        $alphaFields = explode(',', $alphaFields);
+        $alphaSqlParts = [];
+        foreach ($alphaFields as $key => $field) {
+            $field = trim($field);
+            if (empty($field)) {
+                unset($alphaFields[$key]);
+                continue;
+            }
+            $alphaFields[$key] = 'user_' . $field;
+            if (!Cot::$cfg['plugin']['alphafilters']['lettersFromDBUsers'] && $alpha == '_') {
+                $alphaSqlParts[] = Cot::$db->quoteC($alphaFields[$key]) . ' NOT REGEXP("^[a-zA-Z0-9А-Яа-я]")';
+            } else {
+                $alphaSqlParts[] = Cot::$db->quoteC($alphaFields[$key]) . ' LIKE ' .
+                    Cot::$db->quote($alpha . '%');
             }
         }
-    }
 
-	$title[] = $alpha;
-    if(!empty($al_fields)){
-        $where['alpha'] = '';
-        foreach($al_fields as $a_key => $a_field){
-            if($where['alpha'] != '') $where['alpha'] .= ' OR ';
-            $where['alpha'] .= "user_".$a_field." LIKE " . $db->quote($alpha."%");
+        $title[] = $alpha;
+        if (!empty($alphaSqlParts)) {
+            $where['alpha'] = '(' . implode(' OR ', $alphaSqlParts) . ')';
         }
-        if($where['alpha'] != '') $where['alpha'] = "({$where['alpha']})";
     }
 }

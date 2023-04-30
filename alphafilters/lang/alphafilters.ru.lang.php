@@ -1,12 +1,45 @@
 <?php
 /**
- * Plugin Config
+ * Russian Language File for the Alpha Filters plugin
+ *
+ * @package alphafilters
+ * @author esclkm http://www.littledev.ru, Cotonti Team
+ * @copyright (c) 2008-2011 esclkm, 2011-2023 Cotonti Team
  */
-$L['info_desc'] = 'Плагин «Alpha Filters» предоставляет гибкие возможности по фильтрации списков страниц и пользователей по
- буквам, цифрам или комбинациям символов. Вы можете назначить свои стили элементам фильтра (тег: «span»).';
 
-$L['cfg_1'] = array('Фильтр 1');
-$L['cfg_2'] = array('Фильтр 2');
-$L['cfg_3'] = array('Фильтр 3');
-$L['cfg_field'] = array('Поле страниц', 'Фильтрует страницы по полю «page_XXXX»');
-$L['cfg_fieldusers'] = array('Поле пользователей', 'Через запятую. Фильтрует пользователей по полям «user_XXXX»');
+defined('COT_CODE') or die('Wrong URL.');
+
+/**
+ * Plugin config
+ */
+
+$L['cfg_alpha1'] = 'Группа символов 1';
+$L['cfg_alpha1_hint'] = "1-я группа символов фильтра. Для тега <strong>'{ALPHAFILTER_1}'</strong>";
+$L['cfg_alpha2'] = 'Группа символов 2';
+$L['cfg_alpha2_hint'] = "2-я группа символов фильтра. Для тега <strong>'{ALPHAFILTER_2}'</strong>";
+$L['cfg_alpha3'] = 'Группа символов 3';
+$L['cfg_alpha3_hint'] = "3-я группа символов фильтра. Для тега <strong>'{ALPHAFILTER_3}'</strong>";
+
+$L['cfg_turnOnPages'] = 'Включить для страниц';
+$L['cfg_turnOnUsers'] = 'Включить для пользователей';
+
+$L['cfg_field'] = 'Поле для фильтра страниц';
+$L['cfg_field_hint'] = "Фильтровать страницы по полю: <strong>'page_XXXX'</strong>. Если пусто, будет использовано " .
+    "<strong>'title'</strong>. Можно указать несколько полей через запятую.";
+
+$L['cfg_fieldUsers'] = 'Поле для фильтра пользователей';
+$L['cfg_fieldUsers_hint'] = "Фильтровать пользователей по полю: <strong>'user_XXXX'</strong>. Если пусто, будет использовано " .
+    "<strong>'name'</strong>. Можно указать несколько полей через запятую.";
+
+$L['cfg_lettersFromDBPages'] = "Автоматически загрузить символы для фильтра страниц";
+$L['cfg_lettersFromDBPages_hint'] = "Если включено, символы для фильтра будут загружены из таблицы <strong>" .
+    "'cot_pages'</strong> автоматически и настройки символов для фильтра выше будут проигнорированы";
+
+$L['cfg_lettersFromDBUsers'] = "Автоматически загрузить символы для фильтра пользователей";
+$L['cfg_lettersFromDBUsers_hint'] = "Если включено, символы для фильтра будут загружены из таблицы <strong>" .
+    "'cot_users'</strong> автоматически и настройки символов для фильтра выше будут проигнорированы";
+
+$L['info_desc'] = 'Фильтр страниц и пользователей по первому символу';
+
+$L['alphafilters_byFirstLetter'] = 'По первой букве';
+$L['alphafilters_reset'] = 'сброс';
