@@ -31,3 +31,7 @@ Example for users.tpl:
 </div>
 <!-- ENDIF -->
 ```
+
+Plugin example:
+
+![Screenshot](https://user-images.githubusercontent.com/1021886/235350669-1ae221e6-5489-4fda-ae8c-27470b96bbbf.png)
