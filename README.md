@@ -12,6 +12,7 @@ Authors: [esclkm](https://www.cotonti.com/users/esclkm), Kalnov Alexey <kalnoval
 Cotonti Team
 
 Plugin page:  
+https://www.cotonti.com/extensions/navigation-structure/alpha-filters   \
 https://lily-software.com/free-scripts/cotonti-alpha-filters
 
 ## Installation
