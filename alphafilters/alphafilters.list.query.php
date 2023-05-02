@@ -39,6 +39,7 @@ if (Cot::$cfg['plugin']['alphafilters']['turnOnPages']) {
 
         $alphaFields = explode(',', $alphaFields);
         $alphaSqlParts = [];
+        $alphaExistingFields = [];
         foreach ($alphaFields as $key => $field) {
             $field = trim($field);
             if (empty($field)) {
@@ -46,6 +47,39 @@ if (Cot::$cfg['plugin']['alphafilters']['turnOnPages']) {
                 continue;
             }
             $alphaFields[$key] = 'page_' . $field;
+
+            if (
+                !in_array(
+                    $alphaFields[$key],
+                    [
+                        'page_alias',
+                        'page_cat',
+                        'page_title',
+                        'page_desc',
+                        'page_keywords',
+                        'page_metatitle',
+                        'page_metadesc',
+                        'page_text',
+                        'page_author',
+                        'page_url',
+                    ]
+                )
+            ) {
+                if (empty($alphaExistingFields)) {
+                    $alphaCols = Cot::$db->query("SHOW COLUMNS FROM " . Cot::$db->pages)->fetchAll();
+                    foreach ($alphaCols as $column) {
+                        $alphaExistingFields[] = $column['Field'];
+                    }
+                }
+                if (!in_array($alphaFields[$key], $alphaExistingFields)) {
+                    $alphaErrorMsg = "Field '{$alphaFields[$key]}' in pages table not found";
+                    cot_error($alphaErrorMsg);
+                    cot_log($alphaErrorMsg, 'alphafilters', 'filter', 'error');
+                    unset($alphaFields[$key]);
+                    continue;
+                }
+            }
+
             if (!Cot::$cfg['plugin']['alphafilters']['lettersFromDBPages'] && $alpha == '_') {
                 $alphaSqlParts[] = Cot::$db->quoteC($alphaFields[$key]) . ' NOT REGEXP("^[a-zA-Z0-9А-Яа-я]")';
             } else {

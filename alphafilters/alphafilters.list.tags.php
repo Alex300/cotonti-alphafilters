@@ -38,6 +38,7 @@ $filterSymbols = [];
 $alphaFields = null;
 $alphaPrefix = null;
 $alphaTable = null;
+$alphaDontCheck = [];
 if (
     Cot::$env['ext'] == 'users'
     && Cot::$cfg['plugin']['alphafilters']['lettersFromDBUsers']
@@ -46,6 +47,7 @@ if (
         Cot::$cfg['plugin']['alphafilters']['fieldUsers'] : 'name';
     $alphaPrefix = 'user_';
     $alphaTable = Cot::$db->users;
+    $alphaDontCheck = ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email',];
 
 } elseif (
     Cot::$env['ext'] == 'page'
@@ -55,10 +57,23 @@ if (
         Cot::$cfg['plugin']['alphafilters']['field'] : 'title';
     $alphaPrefix = 'page_';
     $alphaTable = Cot::$db->pages;
+    $alphaDontCheck = [
+        'page_alias',
+        'page_cat',
+        'page_title',
+        'page_desc',
+        'page_keywords',
+        'page_metatitle',
+        'page_metadesc',
+        'page_text',
+        'page_author',
+        'page_url',
+    ];
 }
 if (!empty($alphaFields)) {
     $alphaFields = explode(',', $alphaFields);
     $alphaSqlParts = [];
+    $alphaExistingFields = [];
     foreach ($alphaFields as $key => $field) {
         $field = trim($field);
         if (empty($field)) {
@@ -67,14 +82,28 @@ if (!empty($alphaFields)) {
         }
         $alphaFields[$key] = $alphaPrefix . $field;
 
+        if (!in_array($alphaFields[$key], $alphaDontCheck)) {
+            if (empty($alphaExistingFields)) {
+                $alphaCols = Cot::$db->query("SHOW COLUMNS FROM " . $alphaTable)->fetchAll();
+                foreach ($alphaCols as $column) {
+                    $alphaExistingFields[] = $column['Field'];
+                }
+            }
+            if (!in_array($alphaFields[$key], $alphaExistingFields)) {
+                unset($alphaFields[$key]);
+                continue;
+            }
+        }
+
         //$distinct = ($key == 0) ? 'DISTINCT' : '';
         $alphaSqlParts[] = 'SELECT UPPER(LEFT(' . Cot::$db->quoteC($alphaFields[$key]) . ', 1)) as letter FROM '
             . Cot::$db->quoteT($alphaTable);
     }
 
-    $alphaSql = implode(' UNION ', $alphaSqlParts) . ' ORDER BY letter';
-    $letters = Cot::$db->query($alphaSql)->fetchAll(PDO::FETCH_COLUMN);
-
+    if (!empty($alphaSqlParts)) {
+        $alphaSql = implode(' UNION ', $alphaSqlParts) . ' ORDER BY letter';
+        $letters = Cot::$db->query($alphaSql)->fetchAll(PDO::FETCH_COLUMN);
+    }
     if (!empty($letters)) {
         foreach ($letters as $key => $letter) {
             if ($letter === null || in_array($letter, ['', ' '])) {

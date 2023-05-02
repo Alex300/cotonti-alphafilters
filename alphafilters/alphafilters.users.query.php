@@ -30,6 +30,7 @@ if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers']) {
 
         $alphaFields = explode(',', $alphaFields);
         $alphaSqlParts = [];
+        $alphaExistingFields = [];
         foreach ($alphaFields as $key => $field) {
             $field = trim($field);
             if (empty($field)) {
@@ -37,6 +38,26 @@ if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers']) {
                 continue;
             }
             $alphaFields[$key] = 'user_' . $field;
+
+            if (!in_array(
+                $alphaFields[$key],
+                ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email',])
+            ) {
+                if (empty($alphaExistingFields)) {
+                    $alphaCols = Cot::$db->query("SHOW COLUMNS FROM " . Cot::$db->users)->fetchAll();
+                    foreach ($alphaCols as $column) {
+                        $alphaExistingFields[] = $column['Field'];
+                    }
+                }
+                if (!in_array($alphaFields[$key], $alphaExistingFields)) {
+                    $alphaErrorMsg = "Field '{$alphaFields[$key]}' in users table not found";
+                    cot_error($alphaErrorMsg);
+                    cot_log($alphaErrorMsg, 'alphafilters', 'filter', 'error');
+                    unset($alphaFields[$key]);
+                    continue;
+                }
+            }
+
             if (!Cot::$cfg['plugin']['alphafilters']['lettersFromDBUsers'] && $alpha == '_') {
                 $alphaSqlParts[] = Cot::$db->quoteC($alphaFields[$key]) . ' NOT REGEXP("^[a-zA-Z0-9А-Яа-я]")';
             } else {
