@@ -95,8 +95,8 @@ if (!empty($alphaFields)) {
             }
         }
 
-        //$distinct = ($key == 0) ? 'DISTINCT' : '';
-        $alphaSqlParts[] = 'SELECT UPPER(LEFT(' . Cot::$db->quoteC($alphaFields[$key]) . ', 1)) as letter FROM '
+        $distinct = ($key == 0) ? 'DISTINCT ' : '';
+        $alphaSqlParts[] = 'SELECT ' . $distinct . 'UPPER(LEFT(' . Cot::$db->quoteC($alphaFields[$key]) . ', 1)) as letter FROM '
             . Cot::$db->quoteT($alphaTable);
     }
 
