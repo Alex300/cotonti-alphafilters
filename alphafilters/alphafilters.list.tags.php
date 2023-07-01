@@ -22,7 +22,7 @@ Tags=list.tpl:{ALPHAFILTER_1},{ALPHAFILTER_2},{ALPHAFILTER_3}{ALPHAFILTER_RESET}
 defined('COT_CODE') or die('Wrong URL');
 
 if (
-    !$t->hasTag('ALPHAFILTER_1')
+    !($t->hasTag('ALPHAFILTER_1') || $t->hasTag('ALPHAFILTER_2') || $t->hasTag('ALPHAFILTER_3'))
     || (Cot::$env['ext'] == 'page' && !Cot::$cfg['plugin']['alphafilters']['turnOnPages'])
     || (Cot::$env['ext'] == 'users' && !Cot::$cfg['plugin']['alphafilters']['turnOnUsers'])
 ) {
