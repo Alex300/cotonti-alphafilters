@@ -47,7 +47,7 @@ if (
         Cot::$cfg['plugin']['alphafilters']['fieldUsers'] : 'name';
     $alphaPrefix = 'user_';
     $alphaTable = Cot::$db->users;
-    $alphaDontCheck = ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email',];
+    $alphaDontCheck = ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email'];
 
 } elseif (
     Cot::$env['ext'] == 'page'

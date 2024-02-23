@@ -41,7 +41,7 @@ if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers']) {
 
             if (!in_array(
                 $alphaFields[$key],
-                ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email',])
+                ['user_name', 'user_country', 'user_text', 'user_birthdate', 'user_gender', 'user_email'])
             ) {
                 if (empty($alphaExistingFields)) {
                     $alphaCols = Cot::$db->query("SHOW COLUMNS FROM " . Cot::$db->users)->fetchAll();
