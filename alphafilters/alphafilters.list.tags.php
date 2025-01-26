@@ -23,8 +23,8 @@ defined('COT_CODE') or die('Wrong URL');
 
 if (
     !($t->hasTag('ALPHAFILTER_1') || $t->hasTag('ALPHAFILTER_2') || $t->hasTag('ALPHAFILTER_3'))
-    || (Cot::$env['ext'] == 'page' && !Cot::$cfg['plugin']['alphafilters']['turnOnPages'])
-    || (Cot::$env['ext'] == 'users' && !Cot::$cfg['plugin']['alphafilters']['turnOnUsers'])
+    || (Cot::$env['ext'] == 'page' && !(Cot::$cfg['plugin']['alphafilters']['turnOnPages'] ?? false))
+    || (Cot::$env['ext'] == 'users' && !(Cot::$cfg['plugin']['alphafilters']['turnOnUsers'] ?? false))
 ) {
     return;
 }

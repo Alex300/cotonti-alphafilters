@@ -18,7 +18,7 @@ Hooks=users.query
 
 defined('COT_CODE') or die('Wrong URL');
 
-if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers']) {
+if (Cot::$cfg['plugin']['alphafilters']['turnOnUsers'] ?? false) {
     $alpha = cot_import('alpha', 'G', 'TXT');
     if (!empty($alpha)) {
         $alpha = urldecode($alpha);
